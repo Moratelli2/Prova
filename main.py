@@ -4,17 +4,19 @@ import pymongo
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["pythonDB"]
 mycol = mydb["customers"]
+
 arq_csv = open('C:/Users/thiag/PycharmProjects/pyMongo/boletins-de-servicos.csv', encoding='utf-8')
 
+# delimiter especifica o caractere usado para separar cada campo
 arq_reader = csv.reader(arq_csv, delimiter=';')
 
-dictArq = {"BOLETIM": "", "TIPO": "", "PUBLICADO_EM": "", "ASSUNTO": ""}
+
 arq_txt = open('C:/Users/thiag/PycharmProjects/pyMongo/boletins-de-servicos.txt', 'w+')
 
-
-
 while(True):
-    print("Digite [1] para ler o arquivo CSV \nDigite [2] para inserir dados manual \nDigite [3] para baixar os arquivos \nDigite [0] para sair")
+    print("Digite [1] para ler o arquivo CSV \nDigite [2] para inserir dados manual "
+          "\nDigite [3] para baixar os arquivos \nDigite [0] para sair")
+
     escolha = str(input("Digite o Menu que deseja entrar: "))
 
     # Adicionar o CSV no mongo
@@ -23,8 +25,7 @@ while(True):
             dictArq = {"BOLETIM": linha[0], "TIPO": linha[1], "PUBLICADO_EM": linha[2], "ASSUNTO": linha[3]}
             x = mycol.insert_one(dictArq)
 
-
-    #Adicionar manualmente no mongo
+    # Adicionar manualmente no mongo
     if escolha == '2':
         while(True):
             boletim = str(input("Digite o BOLETIM: "))
@@ -39,7 +40,7 @@ while(True):
             if sair == 's':
                 break
 
-    #Download dos dados para um arquivo TXT
+    # Download dos dados para um arquivo TXT
     if escolha == '3':
         for result in mycol.find({}, {"_id": 1, "BOLETIM": 1, "TIPO": 1, "PUBLICADO_EM": 1, "ASSUNTO": 1}):
             result = str(result)
